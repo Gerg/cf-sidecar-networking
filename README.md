@@ -11,7 +11,7 @@ sidecars over TLS.
 1. Update the server route to point to app port 8081, instead of 8080: `cf curl -X PATCH /v3/routes/<ROUTE GUID GOES HERE>/destinations -d '{"destinations": [{"app": { "guid": "<APP GUID GOES HERE>", "process": { "type": "web" } }, "weight": null, "port": 8081, "protocol": "http1" }]}'`
 1. Authorize c2c networking between the app and itself: `cf add-network-policy cf-sidecar-networking cf-sidecar-networking`
 1. Restart the app to update port configuration for the container: `cf restart cf-sidecar-networking`
-1. Curl the server: `curl server.cherry-trader.capi.land`
+1. Curl the server: `curl server.<APP DOMAIN GOES HERE>`
 
 ## How This Works
 
