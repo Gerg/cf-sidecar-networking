@@ -5,7 +5,7 @@ applications:
     buildpacks:
       - binary_buildpack
     routes:
-      - route: server.((system-domain))
+      - route: server.((app-domain))
       - route: sidecar.apps.internal
     processes:
       - type: web
