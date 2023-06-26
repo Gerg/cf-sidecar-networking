@@ -3,6 +3,8 @@
 This is a proof of concept for communicating with Cloud Foundry application
 sidecars over TLS.
 
+Requires cf CLI v7 or greater.
+
 ## Procedure 
 
 1. `cf push --var app-domain=<APP DOMAIN GOES HERE>`
@@ -15,10 +17,24 @@ sidecars over TLS.
 
 ## How This Works
 
-The C2C TLS external container port is only available for the default app port
-(8080). We can make the sidecar listen on this port, so it can do C2C over TLS,
-but then we need to move the webserver to another port (8081, but this could be
-anything).
+[CF Sidecar Networking Diagram](cf-sidecar-networking.png)
+
+The app's web process and sidecar are invocations of the `nc` utility already
+present in the application container. This is why this "app" doesn't have any
+source code, only start commands configured in the app manifest.
+
+The web process receives traffic via the external route (`server.<app domain>`)
+and then curls the sidecar via the internal route (`sidecar.apps.internal`),
+over TLS. The sidecar responds to the server's request, and the server responds
+to the original request, including the sidecar's response.
+
+There is only one TLS port exposed on the C2C overlay network per container 
+(`:61443`). This TLS port always maps to the `$PORT` environment variable
+inside the container (default `:8080`). Thus, whatever we want to connect to
+via C2C TLS has to be bound to`:8080` in the container. This demo moves the
+"server.<app domain>" route to another port (`:8081`, but this could be
+anything), so the sidecar process can bind to `:8080` and be exposed via TLS
+on the C2C network.
 
 Relevant documentation:
 - https://docs.cloudfoundry.org/devguide/deploy-apps/cf-networking.html
