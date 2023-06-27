@@ -17,7 +17,7 @@ Requires cf CLI v7 or greater.
 
 ## How This Works
 
-[CF Sidecar Networking Diagram](cf-sidecar-networking.png)
+![CF Sidecar Networking Diagram](cf-sidecar-networking.png)
 
 The app's web process and sidecar are invocations of the `nc` utility already
 present in the application container. This is why this "app" doesn't have any
